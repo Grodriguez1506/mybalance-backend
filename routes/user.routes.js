@@ -8,6 +8,7 @@ router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
 router.post("/user/refresh", userController.refresh);
 router.get("/user/profile", auth, userController.profile);
-router.put("/user/set-salary", auth, userController.setSalary);
+router.put("/user/edit", auth, userController.edit);
+router.post("/user/logout", userController.logout);
 
 export default router;

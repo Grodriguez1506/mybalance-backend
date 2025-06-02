@@ -114,8 +114,6 @@ const login = async (req, res) => {
     });
 
     return res.status(200).json({
-      status: "success",
-      message: "Logged in successfully",
       token,
     });
   } catch (error) {
@@ -151,37 +149,52 @@ const refresh = (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const user = req.user;
-
-  return res.status(200).json({
-    status: "success",
-    user,
-  });
-};
-
-const setSalary = async (req, res) => {
   const id = req.user.id;
-
-  if (!req.body) {
-    return res.status(400).json({
-      status: "error",
-      message: "There are mandatory fields",
-    });
-  }
-
-  const { salary, currency } = req.body;
 
   try {
     const userFound = await User.findById(id);
 
-    userFound.salary = salary;
-    userFound.currency = currency;
+    return res.status(200).json({
+      status: "success",
+      userFound,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: "Error",
+      message: "Something went wrong",
+    });
+  }
+};
 
-    await userFound.save();
+const edit = async (req, res) => {
+  const id = req.user.id;
+
+  const { password, salary, currency } = req.body;
+
+  let params = {};
+
+  if (password) {
+    const pwd = await bcrypt.hash(password, 10);
+    params.password = pwd;
+  }
+
+  if (salary) {
+    params.salary = salary;
+  }
+
+  if (currency) {
+    params.currency = currency;
+  }
+
+  try {
+    await User.findByIdAndUpdate(id, params, {
+      new: true,
+    });
 
     return res.status(200).json({
       status: "success",
-      message: "Salary updated",
+      message: "User updated successfully",
     });
   } catch (error) {
     console.log(error);
@@ -192,10 +205,20 @@ const setSalary = async (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  res.clearCookie("refreshToken");
+
+  return res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
+};
+
 export default {
   register,
   login,
   refresh,
   profile,
-  setSalary,
+  edit,
+  logout,
 };

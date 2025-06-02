@@ -10,7 +10,7 @@ const createAccessToken = (user) => {
     salary: user.salary,
     currency: user.currency,
     iat: moment().unix(),
-    exp: moment().add(15, "minutes").unix(),
+    exp: moment().add(5, "days").unix(),
   };
 
   return jwt.sign(payload, process.env.JWT_SECRET);

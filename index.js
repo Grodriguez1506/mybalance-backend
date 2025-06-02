@@ -27,7 +27,7 @@ app.use(cookieParser());
 // Configurar el CORS para permitir el frontend
 app.use(
   cors({
-    origin: process.env.FRONTEND_DOMAIN,
+    origin: "http://127.0.0.1:5500",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

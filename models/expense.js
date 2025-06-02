@@ -13,6 +13,14 @@ const expenseSchema = Schema({
     type: Number,
     required: true,
   },
+  currentState: {
+    type: String,
+    default: "unpaid",
+  },
+  period: {
+    type: String,
+    default: "",
+  },
   created_at: {
     type: Date,
     default: Date.now,
