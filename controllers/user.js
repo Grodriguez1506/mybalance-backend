@@ -211,8 +211,6 @@ const logout = (req, res) => {
     path: "/", // Muy importante que coincida con el path original
   });
 
-  console.log(req.cookies.refreshToken);
-
   return res.status(200).json({
     status: "success",
     message: "Logged out successfully",
