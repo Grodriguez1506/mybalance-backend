@@ -117,7 +117,6 @@ const login = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "Something went wrong",
@@ -127,8 +126,6 @@ const login = async (req, res) => {
 
 const refresh = (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-
-  console.log(refreshToken);
 
   if (!refreshToken) {
     return res.status(403).json({ message: "There's not refresh token" });
@@ -162,7 +159,6 @@ const profile = async (req, res) => {
       userFound,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "Error",
       message: "Something went wrong",
@@ -200,7 +196,6 @@ const edit = async (req, res) => {
       message: "User updated successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "Something went wrong",
@@ -264,6 +259,20 @@ const recoveryPassword = async (req, res) => {
   }
 };
 
+const loggedUser = async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (refreshToken) {
+    return res.json({
+      loggedIn: true,
+    });
+  }
+
+  return res.json({
+    loggedIn: false,
+  });
+};
+
 export default {
   register,
   login,
@@ -272,4 +281,5 @@ export default {
   edit,
   logout,
   recoveryPassword,
+  loggedUser,
 };

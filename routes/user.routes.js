@@ -11,5 +11,6 @@ router.get("/user/profile", auth, userController.profile);
 router.put("/user/edit", auth, userController.edit);
 router.post("/user/logout", userController.logout);
 router.put("/user/recovery-password", userController.recoveryPassword);
+router.get("/user/logged", userController.loggedUser);
 
 export default router;
