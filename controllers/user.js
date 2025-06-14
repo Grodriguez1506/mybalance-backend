@@ -239,6 +239,13 @@ const recoveryPassword = async (req, res) => {
   try {
     const userFound = await User.findOne({ username });
 
+    if (!userFound) {
+      return res.status(404).json({
+        status: "error",
+        message: "Username doesn't exist",
+      });
+    }
+
     const password = await bcrypt.hash(pwd, 10);
 
     userFound.password = password;
@@ -250,7 +257,6 @@ const recoveryPassword = async (req, res) => {
       message: "Password recovered successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "Something went wrong",
