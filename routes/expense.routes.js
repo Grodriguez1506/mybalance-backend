@@ -13,5 +13,6 @@ router.put("/expense/unmark/:id", auth, expenseController.unmark);
 router.post("/expense/set-period", auth, expenseController.setPeriod);
 router.get("/expense/unpaid-list", auth, expenseController.unpaidList);
 router.get("/expense/paid-list", auth, expenseController.paidList);
+router.get("/expense/historical", auth, expenseController.historical);
 
 export default router;

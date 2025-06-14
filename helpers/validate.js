@@ -40,3 +40,15 @@ export const validateRegister = (params) => {
     );
   }
 };
+
+export const validateRecovery = (pwd) => {
+  let password =
+    !validator.isAlpha(pwd) &&
+    validator.isLength(pwd, { min: 6, max: undefined });
+
+  if (!password) {
+    throw new Error(
+      "Password must contain letters, numbers and minimun 6 characters"
+    );
+  }
+};

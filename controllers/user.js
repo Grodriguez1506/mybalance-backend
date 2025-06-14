@@ -1,5 +1,5 @@
 import User from "../models/user.js";
-import { validateRegister } from "../helpers/validate.js";
+import { validateRegister, validateRecovery } from "../helpers/validate.js";
 import bcrypt from "bcrypt";
 import JWT from "../helpers/jwt.js";
 import jwt from "jsonwebtoken";
@@ -117,6 +117,7 @@ const login = async (req, res) => {
       token,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "Something went wrong",
@@ -126,6 +127,8 @@ const login = async (req, res) => {
 
 const refresh = (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+
+  console.log(refreshToken);
 
   if (!refreshToken) {
     return res.status(403).json({ message: "There's not refresh token" });
@@ -214,6 +217,47 @@ const logout = (req, res) => {
   });
 };
 
+const recoveryPassword = async (req, res) => {
+  const { username, pwd } = req.body;
+
+  if (!username && !pwd) {
+    return res.status(400).json({
+      status: "error",
+      message: "There are mandatory fields",
+    });
+  }
+
+  try {
+    validateRecovery(pwd);
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+
+  try {
+    const userFound = await User.findOne({ username });
+
+    const password = await bcrypt.hash(pwd, 10);
+
+    userFound.password = password;
+
+    await userFound.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Password recovered successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Something went wrong",
+    });
+  }
+};
+
 export default {
   register,
   login,
@@ -221,4 +265,5 @@ export default {
   profile,
   edit,
   logout,
+  recoveryPassword,
 };

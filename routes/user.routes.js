@@ -10,5 +10,6 @@ router.post("/user/refresh", userController.refresh);
 router.get("/user/profile", auth, userController.profile);
 router.put("/user/edit", auth, userController.edit);
 router.post("/user/logout", userController.logout);
+router.put("/user/recovery-password", userController.recoveryPassword);
 
 export default router;

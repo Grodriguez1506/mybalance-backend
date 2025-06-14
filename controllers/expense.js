@@ -1,3 +1,4 @@
+import expense from "../models/expense.js";
 import Expense from "../models/expense.js";
 import User from "../models/user.js";
 
@@ -260,7 +261,20 @@ const setPeriod = async (req, res) => {
     });
   }
 
-  const period = `${month} - ${year}`;
+  let states = [];
+
+  expenses.forEach((expense) => {
+    states.push(expense.currentState);
+  });
+
+  if (states.includes("unpaid")) {
+    return res.status(400).json({
+      status: "error",
+      message: "There are unpaid expenses",
+    });
+  }
+
+  const period = `${month}/${year}`;
   const id = [];
 
   expenses.forEach((expense) => {
@@ -282,6 +296,39 @@ const setPeriod = async (req, res) => {
   }
 };
 
+const historical = async (req, res) => {
+  const id = req.user.id;
+
+  try {
+    const historical = await Expense.find({ user: id, period: { $ne: "" } });
+
+    if (historical.length == 0) {
+      return res.status(200).json({
+        status: "success",
+        message: "There is not historical yet",
+      });
+    }
+
+    const periods = historical.reduce((acc, item) => {
+      if (!acc[item.period]) {
+        acc[item.period] = [];
+      }
+      acc[item.period].push(item);
+      return acc;
+    }, {});
+
+    return res.status(200).json({
+      status: "success",
+      periods,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Something went wrong",
+    });
+  }
+};
+
 export default {
   create,
   list,
@@ -292,4 +339,5 @@ export default {
   setPeriod,
   unpaidList,
   paidList,
+  historical,
 };
