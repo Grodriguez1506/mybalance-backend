@@ -260,7 +260,7 @@ const recoveryPassword = async (req, res) => {
 };
 
 const loggedUser = async (req, res) => {
-  const refreshToken = req.cookies?.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
 
   if (refreshToken) {
     return res.json({
