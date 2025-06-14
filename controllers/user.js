@@ -204,7 +204,12 @@ const edit = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("refreshToken");
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/", // Muy importante que coincida con el path original
+  });
 
   return res.status(200).json({
     status: "success",
