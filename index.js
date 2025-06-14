@@ -33,6 +33,8 @@ app.use(
   })
 );
 
+console.log(process.env.FRONTEND_DOMAIN);
+
 // Definir las rutas que va a utilizar la app
 app.use("/api", userRoutes);
 app.use("/api", expenseRoutes);
